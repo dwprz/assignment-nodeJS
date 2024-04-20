@@ -1,0 +1,718 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "POST API Specification",
+    "version": "1.0.0",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "paths": {
+    "/api/posts": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["title", "body"],
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Example Title"
+                  },
+                  "body": {
+                    "type": "string",
+                    "example": "Example Body"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success create post",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postWithoutContentsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success get posts for unauthenticated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "postId": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "userName": {
+                        "type": "string",
+                        "example": "johndoe123"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "Example Title"
+                      },
+                      "body": {
+                        "type": "string",
+                        "example": "Example Body"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "totalLikes": {
+                        "type": "number",
+                        "example": 125
+                      },
+                      "totalComments": {
+                        "type": "number",
+                        "example": 20
+                      },
+                      "liked": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "contents": {
+                        "type": "array",
+                        "example": ["http://localhost:3000/example.pdf"]
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2024-04-19T06:58:27.858Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2024-04-19T06:58:27.858Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/api/posts/with-images": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["title", "body", "images"],
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Example Title"
+                  },
+                  "body": {
+                    "type": "string",
+                    "example": "Example Body"
+                  },
+                  "images": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "images": {
+                  "contentType": "image/jpg, image/png"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success create post with images",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postWithPdfResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/api/posts/with-pdf": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["title", "body", "pdf"],
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Example Title"
+                  },
+                  "body": {
+                    "type": "string",
+                    "example": "Example Body"
+                  },
+                  "pdf": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "pdf": {
+                  "contentType": "application/pdf"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success create post with PDF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postWithContentsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/api/posts/:postId": {
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "New Example Title"
+                  },
+                  "body": {
+                    "type": "string",
+                    "example": "New Example Body"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update post",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postWithoutContentsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/api/posts/only-loged-in": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get posts for loged in user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "postId": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "userName": {
+                        "type": "string",
+                        "example": "johndoe123"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "Example Title"
+                      },
+                      "body": {
+                        "type": "string",
+                        "example": "Example Body"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "totalLikes": {
+                        "type": "number",
+                        "example": 125
+                      },
+                      "totalComments": {
+                        "type": "number",
+                        "example": 20
+                      },
+                      "liked": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "contents": {
+                        "type": "array",
+                        "example": ["http://localhost:3000/example.pdf"]
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2024-04-19T06:58:27.858Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2024-04-19T06:58:27.858Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/api/users/:userName": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "name": "userName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "johndoe123"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get posts by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "postId": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "userName": {
+                        "type": "string",
+                        "example": "johndoe123"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "Example Title"
+                      },
+                      "body": {
+                        "type": "string",
+                        "example": "Example Body"
+                      },
+                      "edited": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "totalLikes": {
+                        "type": "number",
+                        "example": 125
+                      },
+                      "totalComments": {
+                        "type": "number",
+                        "example": 20
+                      },
+                      "liked": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "contents": {
+                        "type": "array",
+                        "example": ["http://localhost:3000/example.pdf"]
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2024-04-19T06:58:27.858Z"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2024-04-19T06:58:27.858Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "input is invalid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "access token is required"
+                }
+              }
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbiden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "access denied"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "posts not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "sorry, an internal error occurred on the server. please try again later!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "postWithPdfResponse": {
+        "type": "object",
+        "properties": {
+          "postId": {
+            "type": "number",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Example Title"
+          },
+          "body": {
+            "type": "string",
+            "example": "Example Body"
+          },
+          "edited": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2024-04-19T06:58:27.858Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2024-04-19T06:58:27.858Z"
+          },
+          "userName": {
+            "type": "string",
+            "example": "johndoe123"
+          },
+          "contents": {
+            "type": "array",
+            "example": ["http://localhost:3000/example.pdf"]
+          }
+        }
+      },
+      "postWithContentsResponse": {
+        "type": "object",
+        "properties": {
+          "postId": {
+            "type": "number",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Example Title"
+          },
+          "body": {
+            "type": "string",
+            "example": "Example Body"
+          },
+          "edited": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2024-04-19T06:58:27.858Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2024-04-19T06:58:27.858Z"
+          },
+          "userName": {
+            "type": "string",
+            "example": "johndoe123"
+          },
+          "contents": {
+            "type": "array",
+            "example": ["http://localhost:3000/example.jpg"]
+          }
+        }
+      },
+      "postWithoutContentsResponse": {
+        "type": "object",
+        "properties": {
+          "postId": {
+            "type": "number",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Example Title"
+          },
+          "body": {
+            "type": "string",
+            "example": "Example Body"
+          },
+          "edited": {
+            "type": "boolean",
+            "example": false
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2024-04-19T06:58:27.858Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2024-04-19T06:58:27.858Z"
+          },
+          "userName": {
+            "type": "string",
+            "example": "johndoe123"
+          },
+          "contents": {
+            "type": "array",
+            "example": []
+          }
+        }
+      },
+      "Set-Cookie": {
+        "type": "array",
+        "example": [
+          "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYWQxNjY0MDgtZjU4My00ZWQzLWI2YWEtYTM3NDgxMDk3OTdiIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxNjEwNDMzN30.4XVbi2ipfzMDpHYp5i_lDqCIrxu8J0kwtv9piAUSjV0; Path=/; HttpOnly",
+          "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA2LCJ1c2VyTmFtZSI6IlVTRVJURVNUMTIzIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxMzUxNDEzN30._dVfVSGEYKKQc05jtbm-nhx0xY-bpwLf1pMSFDE0cTc; Path=/; HttpOnly"
+        ]
+      },
+      "accessToken": {
+        "type": "string",
+        "example": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA2LCJ1c2VyTmFtZSI6IlVTRVJURVNUMTIzIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxMzUxNDEzN30._dVfVSGEYKKQc05jtbm-nhx0xY-bpwLf1pMSFDE0cTc; Path=/; HttpOnly"
+      },
+      "refreshToken": {
+        "type": "string",
+        "example": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYWQxNjY0MDgtZjU4My00ZWQzLWI2YWEtYTM3NDgxMDk3OTdiIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxNjEwNDMzN30.4XVbi2ipfzMDpHYp5i_lDqCIrxu8J0kwtv9piAUSjV0; Path=/; HttpOnly"
+      }
+    },
+    "parameters": {
+      "accessToken": {
+        "name": "accessToken",
+        "in": "cookie",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/accessToken"
+        }
+      }
+    }
+  }
+}

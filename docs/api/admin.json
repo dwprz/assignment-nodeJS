@@ -1,0 +1,227 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Admin API Specification",
+    "version": "1.0.0",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "paths": {
+    "/api/admins/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["userName", "password"],
+                "type": "object",
+                "properties": {
+                  "userName": {
+                    "type": "string",
+                    "example": "admin123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login success",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "$ref": "#/components/schemas/Set-Cookie"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "input is invalid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "password is invalid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbiden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "access denied"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "admin not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "admin already exist"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "sorry, an internal error occurred on the server. please try again later!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "AdminResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "adminId": {
+                "type": "number",
+                "example": 1
+              },
+              "userName": {
+                "type": "string",
+                "example": "admin123"
+              },
+              "role": {
+                "type": "string",
+                "example": "ADMIN"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "datetime",
+                "example": "2024-04-19T06:58:27.858Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "datetime",
+                "example": "2024-04-19T06:58:27.858Z"
+              }
+            }
+          }
+        }
+      },
+      "Set-Cookie": {
+        "type": "array",
+        "example": [
+          "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYWQxNjY0MDgtZjU4My00ZWQzLWI2YWEtYTM3NDgxMDk3OTdiIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxNjEwNDMzN30.4XVbi2ipfzMDpHYp5i_lDqCIrxu8J0kwtv9piAUSjV0; Path=/; HttpOnly",
+          "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA2LCJ1c2VyTmFtZSI6IlVTRVJURVNUMTIzIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxMzUxNDEzN30._dVfVSGEYKKQc05jtbm-nhx0xY-bpwLf1pMSFDE0cTc; Path=/; HttpOnly"
+        ]
+      },
+      "accessToken": {
+        "type": "string",
+        "example": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA2LCJ1c2VyTmFtZSI6IlVTRVJURVNUMTIzIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxMzUxNDEzN30._dVfVSGEYKKQc05jtbm-nhx0xY-bpwLf1pMSFDE0cTc; Path=/; HttpOnly"
+      },
+      "refreshToken": {
+        "type": "string",
+        "example": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYWQxNjY0MDgtZjU4My00ZWQzLWI2YWEtYTM3NDgxMDk3OTdiIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxNjEwNDMzN30.4XVbi2ipfzMDpHYp5i_lDqCIrxu8J0kwtv9piAUSjV0; Path=/; HttpOnly"
+      }
+    },
+    "parameters": {
+      "accessToken": {
+        "name": "accessToken",
+        "in": "cookie",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/accessToken"
+        }
+      }
+    }
+  }
+}

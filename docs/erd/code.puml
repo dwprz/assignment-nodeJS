@@ -1,0 +1,119 @@
+@startuml
+
+entity "admins" as Admin {
+    * adminId : INTEGER <<generated>> <<not null>>
+    --
+    userName : VARCHAR(100) <<unique>> <<not null>>
+    password: VARCHAR(100) <<not null>>
+    role: VARCHAR(20) <<not null>>
+    refreshToken: VARCHAR(1000) <<nullable>>
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+}
+
+entity "users" as User {
+    * userId : INTEGER <<generated>> <<not null>>
+    --
+    userName : VARCHAR(100) <<unique>> <<not null>>
+    firstName: VARCHAR(100) <<not null>>
+    lastName: VARCHAR(100) <<nullable>>
+    email: VARCHAR(100) <<not null>>
+    password: VARCHAR(100) <<not null>>
+    photoProfile: VARCHAR(300) <<nullable>>
+    role: VARCHAR(20) DEFAULT "USER" <<not null>>
+    refreshToken: VARCHAR(1000) <<nullable>>
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+}
+
+entity "userFollows" as UserFollow {
+    * follower: VARCHAR(100) <<FK>> REFERENCES User(userName)
+    * following: VARCHAR(100) <<FK>> REFERENCES User(userName)
+    --
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+}
+
+entity "posts" as Post {
+    * postId: INTEGER <<generated>> <<not null>>
+    --
+    title: VARCHAR(100) <<not null>>
+    body: TEXT <<not null>>
+    edited: BOOLEAN DEFAULT false
+    contents: TEXT[] DEFAULT ARRAY[]::TEXT[]
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+    --
+    userName: VARCHAR(100) <<FK>> REFERENCES User(userName)
+}
+
+entity "userPostLike" as UserPostLike {
+    * userName: VARCHAR(100) <<FK>> REFERENCES User(userName)
+    * postId: INTEGER <<FK>> REFERENCES Post(postId)
+    --
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+}
+
+entity "userPostComments" as UserPostComment {
+    * commentId: INTEGER <<generated>> <<not null>>
+    --
+    comment: Text <<not null>>
+    edited: BOOLEAN DEFAULT false
+    tags: TEXT[] DEFAULT ARRAY[]::TEXT[]
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+    --
+    postId: INTEGER <<FK>> REFERENCES Post(postId)
+    userName:VARCHAR(100) <<FK>> REFERENCES User(userName)
+}
+
+entity "userPostCommentLikes" as UserPostCommentLike {
+    * userId: INTEGER <<FK>> REFERENCES User(userId)
+    * commentId: INTEGER <<FK>> REFERENCES userPostComments(commentId)
+    --
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+}
+
+entity "userPostSubComments" as UserPostSubComment {
+    * subCommentId: INTEGER <<generated>> <<not null>>
+    --
+    comment: Text <<not null>>
+    tags: TEXT[] DEFAULT ARRAY[]::TEXT[]
+    edited: BOOLEAN DEFAULT false
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+    --
+    commentId: INTEGER <<FK>> REFERENCES userPostComments(commentId)
+}
+
+entity "userPostSubCommentLikes" as UserPostSubCommentLike {
+    * userId: INTEGER <<FK>> REFERENCES User(userId)
+    * subCommentId: INTEGER <<FK>> REFERENCES userPostSubComments(subCommentId)
+    --
+    createdAt: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updatedAt: TIMESTAMP <<nullable>>
+}
+
+User ||--o{ UserFollow : Follower
+User ||--o{ UserFollow : Following
+
+User ||--o{ Post : Has
+
+User ||--o{ UserPostLike : Has
+Post ||--o{ UserPostLike : Has
+
+User ||--o{ UserPostComment : Has
+Post ||--o{ UserPostComment : Has
+
+User ||--o{ UserPostCommentLike : Has
+UserPostComment ||--o{ UserPostCommentLike : Has
+
+User ||--o{ UserPostSubComment : Has
+UserPostComment ||--o{ UserPostSubComment : Has
+
+User ||--o{ UserPostSubCommentLike : Has
+UserPostSubComment ||--o{ UserPostSubCommentLike : Has
+
+@enduml

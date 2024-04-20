@@ -1,0 +1,649 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Comment API Specification",
+    "version": "1.0.0",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "paths": {
+    "/api/posts/:postId/comments": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/postId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["comment"],
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "example": "Comment Test"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "example": ["johndoe123", "johndoe345"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comment created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "commentId": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "userName": {
+                      "type": "string",
+                      "example": "johndoe123"
+                    },
+                    "postId": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "Comment Test"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "tags": {
+                      "type": "array",
+                      "example": ["johndoe123", "johndoe345"]
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "datetime",
+                      "example": "2024-04-19T06:58:27.858Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "datetime",
+                      "example": "2024-04-19T06:58:27.858Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/postId"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Comment retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "commentId": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "userName": {
+                            "type": "string",
+                            "example": "johndoe123"
+                          },
+                          "postId": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "comment": {
+                            "type": "string",
+                            "example": "Comment Test"
+                          },
+                          "edited": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "tags": {
+                            "type": "array",
+                            "example": ["johndoe123", "johndoe345"]
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "datetime",
+                            "example": "2024-04-19T06:58:27.858Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "datetime",
+                            "example": "2024-04-19T06:58:27.858Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/api/posts/current/comments/:commentId": {
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/commentId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "example": "New Comment Test"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comment updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "commentId": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "userName": {
+                      "type": "string",
+                      "example": "johndoe123"
+                    },
+                    "postId": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "New Comment Test"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "tags": {
+                      "type": "array",
+                      "example": ["johndoe123", "johndoe345"]
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "datetime",
+                      "example": "2024-04-19T06:58:27.858Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "datetime",
+                      "example": "2024-04-19T06:58:27.858Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/api/posts/current/comments/:commentId/sub-comments": {
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/commentId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["comment"],
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "example": "Comment Test"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "example": ["johndoe123", "johndoe345"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sub comment created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "subCommentId": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "userName": {
+                      "type": "string",
+                      "example": "johndoe123"
+                    },
+                    "commentId": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "Comment Test"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "tags": {
+                      "type": "array",
+                      "example": ["johndoe123", "johndoe345"]
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "datetime",
+                      "example": "2024-04-19T06:58:27.858Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "datetime",
+                      "example": "2024-04-19T06:58:27.858Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/commentId"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sub comment retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "subCommentId": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "userName": {
+                            "type": "string",
+                            "example": "johndoe123"
+                          },
+                          "commentId": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "comment": {
+                            "type": "string",
+                            "example": "Comment Test"
+                          },
+                          "edited": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "tags": {
+                            "type": "array",
+                            "example": ["johndoe123", "johndoe345"]
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "datetime",
+                            "example": "2024-04-19T06:58:27.858Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "datetime",
+                            "example": "2024-04-19T06:58:27.858Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/api/posts/current/comments/current/sub-comments/:subCommentId": {
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/subCommentId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "example": "New Sub Comment Test"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sub comment updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "subCommentId": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "userName": {
+                      "type": "string",
+                      "example": "johndoe123"
+                    },
+                    "commentId": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "New Sub Comment Test"
+                    },
+                    "edited": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "tags": {
+                      "type": "array",
+                      "example": ["johndoe123", "johndoe345"]
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "datetime",
+                      "example": "2024-04-19T06:58:27.858Z"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "datetime",
+                      "example": "2024-04-19T06:58:27.858Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "input is invalid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "accessToken is required"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "sorry, an internal error occurred on the server. please try again later!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Set-Cookie": {
+        "type": "array",
+        "example": [
+          "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYWQxNjY0MDgtZjU4My00ZWQzLWI2YWEtYTM3NDgxMDk3OTdiIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxNjEwNDMzN30.4XVbi2ipfzMDpHYp5i_lDqCIrxu8J0kwtv9piAUSjV0; Path=/; HttpOnly",
+          "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA2LCJ1c2VyTmFtZSI6IlVTRVJURVNUMTIzIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxMzUxNDEzN30._dVfVSGEYKKQc05jtbm-nhx0xY-bpwLf1pMSFDE0cTc; Path=/; HttpOnly"
+        ]
+      },
+      "accessToken": {
+        "type": "string",
+        "example": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjA2LCJ1c2VyTmFtZSI6IlVTRVJURVNUMTIzIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxMzUxNDEzN30._dVfVSGEYKKQc05jtbm-nhx0xY-bpwLf1pMSFDE0cTc; Path=/; HttpOnly"
+      },
+      "refreshToken": {
+        "type": "string",
+        "example": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYWQxNjY0MDgtZjU4My00ZWQzLWI2YWEtYTM3NDgxMDk3OTdiIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTM1MTIzMzcsImV4cCI6MTcxNjEwNDMzN30.4XVbi2ipfzMDpHYp5i_lDqCIrxu8J0kwtv9piAUSjV0; Path=/; HttpOnly"
+      }
+    },
+    "parameters": {
+      "accessToken": {
+        "name": "accessToken",
+        "in": "cookie",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/accessToken"
+        }
+      },
+      "postId": {
+        "name": "postId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "commentId": {
+        "name": "commentId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "subCommentId": {
+        "name": "subCommentId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "number",
+          "example": 1
+        }
+      }
+    }
+  }
+}
